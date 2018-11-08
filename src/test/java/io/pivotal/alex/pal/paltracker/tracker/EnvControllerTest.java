@@ -1,10 +1,8 @@
-package test.pivotal.pal.tracker;
+package io.pivotal.alex.pal.paltracker.tracker;
 
 import org.junit.Test;
 
 import java.util.Map;
-import io.pivotal.pal.tracker.EnvController;
-
 import static org.assertj.core.api.Assertions.assertThat;
 
 public class EnvControllerTest {

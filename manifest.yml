@@ -1,0 +1,8 @@
+---
+applications:
+- name: pal-tracker
+  path: build/libs/pal-tracker-0.0.1-SNAPSHOT.jar
+  memory: 1024M
+  env:
+    WELCOME_MESSAGE: Hello from Cloud Foundry
+  instances: 2
