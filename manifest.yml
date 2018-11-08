@@ -1,7 +1,7 @@
 ---
 applications:
 - name: pal-tracker
-  path: build/libs/pal-tracker-0.0.1-SNAPSHOT.jar
+  path: build/libs/pal-tracker.jar
   memory: 1024M
   env:
     WELCOME_MESSAGE: Hello from the review environment
