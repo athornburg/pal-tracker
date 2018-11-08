@@ -18,8 +18,11 @@ apply plugin: 'org.springframework.boot'
 apply plugin: 'io.spring.dependency-management'
 apply plugin: "io.pivotal.pal.assignments.plugin"
 
+jar {
+    baseName 'pal-tracker'
+}
+
 group = 'io.pivotal.alex.pal'
-version = '0.0.1-SNAPSHOT'
 sourceCompatibility = 1.8
 
 repositories {
