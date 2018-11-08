@@ -7,4 +7,4 @@ applications:
     - route: al-pal-tracker-fun.cfapps.io
   env:
     WELCOME_MESSAGE: Hello from the review environment
-  instances: 2
+  instances: 1
