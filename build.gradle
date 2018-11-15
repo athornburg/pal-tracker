@@ -44,14 +44,6 @@ dependencies {
     testImplementation('org.springframework.boot:spring-boot-starter-test')
 }
 
-bootRun.environment([
-        "WELCOME_MESSAGE": "hello",
-])
-
-test.environment([
-        "WELCOME_MESSAGE": "Hello from test",
-])
-
 assignments {
     apiUrl = "https://waveland.education.pivotal.io"
     emails = ["athornburg@pivotal.io"]
