@@ -7,7 +7,6 @@ import org.springframework.jdbc.core.namedparam.MapSqlParameterSource;
 import org.springframework.jdbc.core.namedparam.NamedParameterJdbcTemplate;
 import org.springframework.jdbc.support.GeneratedKeyHolder;
 import org.springframework.jdbc.support.KeyHolder;
-import org.springframework.lang.Nullable;
 
 import javax.sql.DataSource;
 import java.math.BigInteger;
@@ -20,10 +19,12 @@ import java.util.Map;
 import java.util.stream.Collectors;
 
 public class JdbcTimeEntryRepository implements TimeEntryRepository {
-    private NamedParameterJdbcTemplate jdbcTemplate;
+    private NamedParameterJdbcTemplate namedParameterJdbcTemplate;
+    private JdbcTemplate jdbcTemplate;
 
     public JdbcTimeEntryRepository(DataSource dataSource) {
-        this.jdbcTemplate = new NamedParameterJdbcTemplate(new JdbcTemplate(dataSource));
+        this.jdbcTemplate = new JdbcTemplate(dataSource);
+        this.namedParameterJdbcTemplate = new NamedParameterJdbcTemplate(this.jdbcTemplate);
     }
 
     @Override
@@ -35,7 +36,7 @@ public class JdbcTimeEntryRepository implements TimeEntryRepository {
         namedParameters.put("hours", timeEntry.getHours());
 
         KeyHolder holder = new GeneratedKeyHolder();
-        jdbcTemplate.update(
+        namedParameterJdbcTemplate.update(
                 "INSERT INTO TIME_ENTRIES (project_id, user_id, date, hours) VALUES (:projectId, :userId, :date, :hours)",
                 new MapSqlParameterSource(namedParameters),
                 holder);
@@ -50,10 +51,9 @@ public class JdbcTimeEntryRepository implements TimeEntryRepository {
         Map<String, Long> findParams = new HashMap<>();
         findParams.put("id", id);
         try {
-            return jdbcTemplate.queryForObject("SELECT * FROM TIME_ENTRIES where id = :id",
+            return namedParameterJdbcTemplate.queryForObject("SELECT * FROM TIME_ENTRIES where id = :id",
                     new MapSqlParameterSource(findParams),
                     new RowMapper<TimeEntry>() {
-                        @Nullable
                         @Override
                         public TimeEntry mapRow(ResultSet resultSet, int i) throws SQLException {
                             return new TimeEntry(
@@ -72,7 +72,7 @@ public class JdbcTimeEntryRepository implements TimeEntryRepository {
 
     @Override
     public List<TimeEntry> list() {
-        List<Map<String, Object>> timeEntries = jdbcTemplate.getJdbcTemplate().queryForList("SELECT * FROM TIME_ENTRIES");
+        List<Map<String, Object>> timeEntries = this.jdbcTemplate.queryForList("SELECT * FROM TIME_ENTRIES");
         return timeEntries
                 .stream()
                 .map(timeEntryResultMap -> new TimeEntry(
@@ -94,7 +94,7 @@ public class JdbcTimeEntryRepository implements TimeEntryRepository {
         namedParameters.put("hours", timeEntry.getHours());
 
         KeyHolder holder = new GeneratedKeyHolder();
-        jdbcTemplate.update(
+        namedParameterJdbcTemplate.update(
                 "UPDATE TIME_ENTRIES SET project_id = :projectId, user_id = :userId, date = :date, hours = :hours WHERE id = :id",
                 new MapSqlParameterSource(namedParameters),
                 holder);
@@ -108,7 +108,7 @@ public class JdbcTimeEntryRepository implements TimeEntryRepository {
         namedParameters.put("id", id);
 
         TimeEntry timeEntry = find(id);
-        jdbcTemplate.update("DELETE FROM TIME_ENTRIES WHERE id = :id", new MapSqlParameterSource(namedParameters));
+        namedParameterJdbcTemplate.update("DELETE FROM TIME_ENTRIES WHERE id = :id", new MapSqlParameterSource(namedParameters));
 
         return timeEntry;
     }
