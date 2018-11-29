@@ -11,18 +11,18 @@ public class SecurityConfiguration extends WebSecurityConfigurerAdapter {
 
     private boolean httpsDisabled;
 
-    public SecurityConfiguration(@Value("${https.disabled}") boolean httpsDisabled){
+    public SecurityConfiguration(@Value("${HTTPS_DISABLED}") boolean httpsDisabled) {
         this.httpsDisabled = httpsDisabled;
     }
 
     @Override
     protected void configure(HttpSecurity http) throws Exception {
         if (httpsDisabled) {
-            http.csrf().disable().authorizeRequests().antMatchers("/**").hasRole("USER").and().formLogin()
-                    .and().requiresChannel().anyRequest();
+            http.csrf().disable().authorizeRequests().antMatchers("/**").hasRole("USER")
+                    .and().httpBasic().and().requiresChannel().anyRequest();
         } else {
-            http.authorizeRequests().antMatchers("/**").hasRole("USER").and().formLogin()
-                    .and().requiresChannel().anyRequest().requiresSecure();
+            http.authorizeRequests().antMatchers("/**").hasRole("USER")
+                    .and().httpBasic().and().requiresChannel().anyRequest().requiresSecure();
         }
     }
 
