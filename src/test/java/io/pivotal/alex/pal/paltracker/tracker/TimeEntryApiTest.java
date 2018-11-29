@@ -44,7 +44,7 @@ public class TimeEntryApiTest {
                 .rootUri("http://localhost:" + port)
                 .basicAuthorization("user", "password");
         restTemplate = new TestRestTemplate(builder);
-        
+
         MysqlDataSource dataSource = new MysqlDataSource();
         dataSource.setUrl(System.getenv("SPRING_DATASOURCE_URL"));
 
